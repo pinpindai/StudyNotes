@@ -32,6 +32,39 @@
 
 算法思路：维护一个包含K个元素的小顶堆，保存前K大的元素
 
+```C++
+class myCompare{
+    public:
+    bool operator()(const pair<int, int>& lh, const pair<int, int>& rh) {
+        return lh.second > rh.second;
+    }
+};
+
+vector<int> topKFrequent(vector<int>& nums, int k) {
+    unordered_map<int, int> record;
+    for(int num: nums) {
+        record[num]++;
+    }
+    
+    priority_queue<pair<int, int>, vector<pair<int, int>>, myCompare> pri_que;
+    
+    for(auto iter = record.begin(); iter != record.end(); ++iter) {
+        pri_que.push(*iter);
+        if(pri_que.size() > k) {
+            pri_que.pop();
+        }
+    }
+    
+    vector<int> res(k);
+    for(int i = k-1; i >= 0; --i) {
+        res[i] = pri_que.top().first;
+        pri_que.pop();
+    }
+    
+    return res;
+}
+```
+
 时间复杂度：O(n)
 
 空间复杂度：O(k)
